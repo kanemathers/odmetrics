@@ -29,16 +29,25 @@ struct metrics
 
 int main()
 {
-    struct metrics metrics;
-    rts_t          rts;
+    struct metrics  metrics;
+    rts_t           rts;
+    char           *dumped;
 
     metrics.wifi_pushed  = 10;
     metrics.wifi_pushed += 5;
     metrics.wifi_sniffed = 7;
 
     rts_init(&rts);
-    rts_metrics_add(&rts, "test", &metrics.wifi_pushed);
-    rts_metrics_add(&rts, "test", &metrics.wifi_sniffed);
+
+    rts_metrics_add(&rts, "wifi_sniffed", &metrics.wifi_sniffed);
+    rts_metrics_add(&rts, "wifi_pushed", &metrics.wifi_pushed);
+
+    rts_metrics_print(&rts);
+    dumped = rts_metrics_json(&rts);
+
+    printf("%s\n", dumped);
+
+    free(dumped);
 
     return 0;
 

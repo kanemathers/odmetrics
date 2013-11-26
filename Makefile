@@ -8,7 +8,7 @@ CFLAGS=-Wall \
 		-Werror \
 		-Wno-unused-parameter \
 		-pedantic
-LDFLAGS=-lpthread
+LDFLAGS=-lpthread -ljansson
 OFILES=$(SOURCES:.c=.o)
 CC=gcc
 
