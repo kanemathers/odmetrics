@@ -18,6 +18,7 @@ int rts_init(rts_t *rts)
 
 void rts_destroy(rts_t *rts)
 {
+    rts_metrics_free(rts);
 }
 
 /* global metrics struct in users program */
@@ -46,8 +47,11 @@ int main()
 
     for (i = 0; i < 10; i++)
     {
+        metrics.wifi_pushed  += i;
+        metrics.wifi_sniffed += i;
+
         printf("i: %d\n", i);
-        sleep(2);
+        sleep(1);
     }
 
     rts_destroy(&rts);

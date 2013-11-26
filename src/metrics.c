@@ -32,6 +32,18 @@ int rts_metrics_add(rts_t *rts, const char *key, int *value)
     return 0;
 }
 
+void rts_metrics_free(rts_t *rts)
+{
+    struct metric *metric;
+    struct metric *tmp;
+
+    HASH_ITER(hh, rts->metrics, metric, tmp)
+    {
+        HASH_DEL(rts->metrics, metric);
+        free(metric);
+    }
+}
+
 void rts_metrics_print(rts_t *rts)
 {
     struct metric *metric;

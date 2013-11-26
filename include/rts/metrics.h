@@ -13,6 +13,8 @@ struct metric
 
 int rts_metrics_add(rts_t *rts, const char *key, int *value);
 
+void rts_metrics_free(rts_t *rts);
+
 void rts_metrics_print(rts_t *rts);
 char *rts_metrics_json(rts_t *rts);
 
