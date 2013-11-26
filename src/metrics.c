@@ -3,14 +3,14 @@
 
 #include <jansson.h>
 
-#include "rts/rts.h"
-#include "rts/metrics.h"
+#include "odmetrics/odm.h"
+#include "odmetrics/metrics.h"
 
-int rts_metrics_add(rts_t *rts, const char *key, int *value)
+int odm_metrics_add(odm_t *odm, const char *key, int *value)
 {
     struct metric *metric;
 
-    HASH_FIND(hh, rts->metrics, key, strlen(key), metric);
+    HASH_FIND(hh, odm->metrics, key, strlen(key), metric);
 
     if (!metric)
     {
@@ -22,7 +22,7 @@ int rts_metrics_add(rts_t *rts, const char *key, int *value)
         metric->key   = key;
         metric->value = value;
 
-        HASH_ADD_KEYPTR(hh, rts->metrics, key, strlen(key), metric);
+        HASH_ADD_KEYPTR(hh, odm->metrics, key, strlen(key), metric);
     }
     else
     {
@@ -32,35 +32,35 @@ int rts_metrics_add(rts_t *rts, const char *key, int *value)
     return 0;
 }
 
-void rts_metrics_free(rts_t *rts)
+void odm_metrics_free(odm_t *odm)
 {
     struct metric *metric;
     struct metric *tmp;
 
-    HASH_ITER(hh, rts->metrics, metric, tmp)
+    HASH_ITER(hh, odm->metrics, metric, tmp)
     {
-        HASH_DEL(rts->metrics, metric);
+        HASH_DEL(odm->metrics, metric);
         free(metric);
     }
 }
 
-void rts_metrics_print(rts_t *rts)
+void odm_metrics_print(odm_t *odm)
 {
     struct metric *metric;
 
-    for (metric = rts->metrics; metric != NULL; metric = metric->hh.next)
+    for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
         printf("%s: %d\n", metric->key, *metric->value);
 
     printf("\n");
 }
 
-char *rts_metrics_json(rts_t *rts)
+char *odm_metrics_json(odm_t *odm)
 {
     json_t        *j_metrics = json_object();
     struct metric *metric;
     char          *dumped;
 
-    for (metric = rts->metrics; metric != NULL; metric = metric->hh.next)
+    for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
         json_object_set_new(j_metrics, metric->key,
                             json_integer(*metric->value));
 

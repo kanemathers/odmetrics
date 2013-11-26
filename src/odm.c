@@ -2,23 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "rts/rts.h"
-#include "rts/metrics.h"
-#include "rts/server.h"
+#include "odmetrics/odm.h"
+#include "odmetrics/metrics.h"
+#include "odmetrics/server.h"
 
 /* test */
 #include <unistd.h>
 
-int rts_init(rts_t *rts)
+int odm_init(odm_t *odm)
 {
-    rts->metrics = NULL;
+    odm->metrics = NULL;
 
     return 0;
 }
 
-void rts_destroy(rts_t *rts)
+void odm_destroy(odm_t *odm)
 {
-    rts_metrics_free(rts);
+    odm_metrics_free(odm);
 }
 
 /* global metrics struct in users program */
@@ -31,19 +31,19 @@ struct metrics
 int main()
 {
     struct metrics metrics;
-    rts_t          rts;
+    odm_t          odm;
     int            i;
 
     metrics.wifi_pushed  = 10;
     metrics.wifi_pushed += 5;
     metrics.wifi_sniffed = 7;
 
-    rts_init(&rts);
+    odm_init(&odm);
 
-    rts_metrics_add(&rts, "wifi_sniffed", &metrics.wifi_sniffed);
-    rts_metrics_add(&rts, "wifi_pushed", &metrics.wifi_pushed);
+    odm_metrics_add(&odm, "wifi_sniffed", &metrics.wifi_sniffed);
+    odm_metrics_add(&odm, "wifi_pushed", &metrics.wifi_pushed);
 
-    rts_serve(&rts, "127.0.0.1", "8000");
+    odm_serve(&odm, "127.0.0.1", "8000");
 
     for (i = 0; i < 10; i++)
     {
@@ -54,7 +54,7 @@ int main()
         sleep(1);
     }
 
-    rts_destroy(&rts);
+    odm_destroy(&odm);
 
     return 0;
 }

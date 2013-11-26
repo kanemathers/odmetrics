@@ -1,7 +1,7 @@
-PROJECT=rts
+PROJECT=odmetrics
 SOURCES=src/metrics.c \
 		src/server.c \
-		src/rts.c
+		src/odm.c
 INCFLAGS=-I$(shell pwd)/include
 CFLAGS=-Wall \
 		-Wextra \

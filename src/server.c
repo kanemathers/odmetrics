@@ -11,14 +11,14 @@
 #include <signal.h>
 #include <pthread.h>
 
-#include "rts/rts.h"
-#include "rts/metrics.h"
+#include "odmetrics/odm.h"
+#include "odmetrics/metrics.h"
 
 struct serverargs
 {
     const char *hostname;
     const char *port;
-    rts_t      *rts;
+    odm_t      *odm;
 };
 
 static int net_listen(const char *hostname, const char *port)
@@ -105,7 +105,7 @@ static void sigchild_handler(int s)
 static void *start_server(void *args)
 {
     struct serverargs      *serverargs = args;
-    rts_t                  *rts        = serverargs->rts;
+    odm_t                  *odm        = serverargs->odm;
     int                     sockfd;
     int                     new_fd;
     struct sockaddr_storage their_addr;
@@ -137,7 +137,7 @@ static void *start_server(void *args)
         {
             close(sockfd);
 
-            metrics     = rts_metrics_json(rts);
+            metrics     = odm_metrics_json(odm);
             metrics_len = strlen(metrics);
 
             net_sendall(new_fd, metrics, &metrics_len);
@@ -153,16 +153,16 @@ static void *start_server(void *args)
     return NULL;
 }
 
-int rts_serve(rts_t *rts, const char *hostname, const char *port)
+int odm_serve(odm_t *odm, const char *hostname, const char *port)
 {
     struct serverargs *serverargs = malloc(sizeof *serverargs);
 
     serverargs->hostname = hostname;
     serverargs->port     = port;
-    serverargs->rts      = rts;
+    serverargs->odm      = odm;
 
-    pthread_create(&(rts->server), NULL, start_server, serverargs);
-    pthread_detach(rts->server);
+    pthread_create(&(odm->server), NULL, start_server, serverargs);
+    pthread_detach(odm->server);
 
     return 0;
 }
