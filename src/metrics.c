@@ -1,16 +1,13 @@
 #include <stdlib.h>
 
+#include "rts/rts.h"
 #include "rts/metrics.h"
 
-#include <stdio.h>
-
-struct metric *metrics = NULL;
-
-int rts_add_metric(const char *key, int *value)
+int rts_metrics_add(rts_t *rts, const char *key, int *value)
 {
     struct metric *metric;
 
-    HASH_FIND(hh, metrics, key, strlen(key), metric);
+    HASH_FIND(hh, rts->metrics, key, strlen(key), metric);
 
     if (!metric)
     {
@@ -22,7 +19,7 @@ int rts_add_metric(const char *key, int *value)
         metric->key   = key;
         metric->value = value;
 
-        HASH_ADD_KEYPTR(hh, metrics, key, strlen(key), metric);
+        HASH_ADD_KEYPTR(hh, rts->metrics, key, strlen(key), metric);
     }
     else
     {

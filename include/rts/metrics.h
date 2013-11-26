@@ -11,6 +11,6 @@ struct metric
     UT_hash_handle  hh;
 };
 
-int rts_add_metric(const char *key, int *value);
+int rts_metrics_add(rts_t *rts, const char *key, int *value);
 
 #endif

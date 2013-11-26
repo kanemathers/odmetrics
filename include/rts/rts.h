@@ -3,9 +3,12 @@
 
 #include <pthread.h>
 
+struct metric;
+
 typedef struct rts
 {
-    pthread_t server;
+    struct metric *metrics;
+    pthread_t      server;
 } rts_t;
 
 int rts_init(rts_t *rts);

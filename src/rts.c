@@ -11,6 +11,8 @@
 
 int rts_init(rts_t *rts)
 {
+    rts->metrics = NULL;
+
     return 0;
 }
 
@@ -35,8 +37,8 @@ int main()
     metrics.wifi_sniffed = 7;
 
     rts_init(&rts);
-    rts_add_metric("test", &metrics.wifi_pushed);
-    rts_add_metric("test", &metrics.wifi_sniffed);
+    rts_metrics_add(&rts, "test", &metrics.wifi_pushed);
+    rts_metrics_add(&rts, "test", &metrics.wifi_sniffed);
 
     return 0;
 
