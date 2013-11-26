@@ -12,9 +12,9 @@ LDFLAGS=-lpthread -ljansson
 OFILES=$(SOURCES:.c=.o)
 CC=gcc
 
-.PHONY: clean rts
+.PHONY: clean $(PROJECT)
 
-rts: $(OFILES)
+$(PROJECT): $(OFILES)
 	$(CC) $(OFILES) $(LDFLAGS) -o $(PROJECT)
 
 .c.o:
