@@ -7,14 +7,10 @@
 struct metric
 {
     const char     *key;
-    void           *value;
-    const char     *format;
+    int            *value;
     UT_hash_handle  hh;
 };
 
-int rts_add_metric(rts_t *rts, const char *key, const char *format,
-                   void *value);
-
-int rts_get_metric(rts_t *rts, const char *key, char *output, size_t size);
+int rts_add_metric(const char *key, int *value);
 
 #endif
