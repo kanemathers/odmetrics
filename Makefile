@@ -20,5 +20,9 @@ $(PROJECT): $(OFILES)
 .c.o:
 	$(CC) $(INCFLAGS) -c $(CFLAGS) $< -o $@
 
+docs:
+	rm -rf docs
+	doxygen $(PROJECT).doxygen
+
 clean:
 	rm $(PROJECT)
