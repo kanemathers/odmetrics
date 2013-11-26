@@ -38,6 +38,8 @@ void rts_metrics_print(rts_t *rts)
 
     for (metric = rts->metrics; metric != NULL; metric = metric->hh.next)
         printf("%s: %d\n", metric->key, *metric->value);
+
+    printf("\n");
 }
 
 char *rts_metrics_json(rts_t *rts)

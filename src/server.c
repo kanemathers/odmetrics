@@ -12,11 +12,13 @@
 #include <pthread.h>
 
 #include "rts/rts.h"
+#include "rts/metrics.h"
 
-struct netinfo
+struct serverargs
 {
     const char *hostname;
     const char *port;
+    rts_t      *rts;
 };
 
 static int net_listen(const char *hostname, const char *port)
@@ -100,20 +102,21 @@ static void sigchild_handler(int s)
     while (waitpid(-1, NULL, WNOHANG) > 0);
 }
 
-static void *start_server(void *info)
+static void *start_server(void *args)
 {
-    struct netinfo         *netinfo = info;
+    struct serverargs      *serverargs = args;
+    rts_t                  *rts        = serverargs->rts;
     int                     sockfd;
     int                     new_fd;
     struct sockaddr_storage their_addr;
     socklen_t               sin_size;
     struct sigaction        sa;
+    char                   *metrics;
+    int                     metrics_len;
 
-    /* XXX: test data */
-    char *test_data = "Hello, World!\n";
-    int   test_len  = strlen(test_data);
+    sockfd = net_listen(serverargs->hostname, serverargs->port);
 
-    sockfd = net_listen(netinfo->hostname, netinfo->port);
+    free(serverargs);
 
     if (sockfd < 0)
         return NULL;
@@ -133,9 +136,14 @@ static void *start_server(void *info)
         if (fork() == 0)
         {
             close(sockfd);
-            net_sendall(new_fd, test_data, &test_len);
-            close(new_fd);
 
+            metrics     = rts_metrics_json(rts);
+            metrics_len = strlen(metrics);
+
+            net_sendall(new_fd, metrics, &metrics_len);
+            free(metrics);
+
+            close(new_fd);
             exit(0);
         }
 
@@ -147,23 +155,14 @@ static void *start_server(void *info)
 
 int rts_serve(rts_t *rts, const char *hostname, const char *port)
 {
-    struct netinfo netinfo;
-    pthread_attr_t attrs;
+    struct serverargs *serverargs = malloc(sizeof *serverargs);
 
-    netinfo.hostname = hostname;
-    netinfo.port     = port;
+    serverargs->hostname = hostname;
+    serverargs->port     = port;
+    serverargs->rts      = rts;
 
-    pthread_attr_init(&attrs);
-    pthread_attr_setdetachstate(&attrs, PTHREAD_CREATE_DETACHED);
-    pthread_create(&(rts->server), &attrs, start_server, &netinfo);
-    pthread_attr_destroy(&attrs);
-
-    /* guessing this is needed to ensure ``start_server`` enters its
-     * ``while (1)`` loop before we return.
-     *
-     * need a better way to do this.
-     */
-    sleep(1);
+    pthread_create(&(rts->server), NULL, start_server, serverargs);
+    pthread_detach(rts->server);
 
     return 0;
 }

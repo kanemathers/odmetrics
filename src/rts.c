@@ -29,9 +29,9 @@ struct metrics
 
 int main()
 {
-    struct metrics  metrics;
-    rts_t           rts;
-    char           *dumped;
+    struct metrics metrics;
+    rts_t          rts;
+    int            i;
 
     metrics.wifi_pushed  = 10;
     metrics.wifi_pushed += 5;
@@ -42,23 +42,15 @@ int main()
     rts_metrics_add(&rts, "wifi_sniffed", &metrics.wifi_sniffed);
     rts_metrics_add(&rts, "wifi_pushed", &metrics.wifi_pushed);
 
-    rts_metrics_print(&rts);
-    dumped = rts_metrics_json(&rts);
-
-    printf("%s\n", dumped);
-
-    free(dumped);
-
-    return 0;
-
-    /*
     rts_serve(&rts, "127.0.0.1", "8000");
 
     for (i = 0; i < 10; i++)
-        sleep(1);
+    {
+        printf("i: %d\n", i);
+        sleep(2);
+    }
 
     rts_destroy(&rts);
 
     return 0;
-    */
 }
