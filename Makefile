@@ -5,11 +5,11 @@ OFILES := $(CFILES:.c=.o)
 
 INCFLAGS += -I$(shell pwd)/include
 LDFLAGS  += -lpthread -ljansson
-CFLAGS   += -fPIC -g -pedantic
+CFLAGS   += -fPIC -Wall -pedantic
 
 # extra debug output for development purposes
 ifeq ($(DEBUG), 1)
-	CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
+	CFLAGS += -Werror -Wextra -Wno-unused-parameter
 endif
 
 CC ?= gcc

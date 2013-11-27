@@ -5,6 +5,7 @@
 
 #include "odmetrics/odm.h"
 #include "odmetrics/metrics.h"
+#include "odmetrics/uthash.h"
 
 int odm_metrics_add(odm_t *odm, const char *key, int *value)
 {
