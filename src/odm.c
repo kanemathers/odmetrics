@@ -11,4 +11,6 @@ int odm_init(odm_t *odm)
 void odm_destroy(odm_t *odm)
 {
     odm_metrics_free(odm);
+
+    odm->metrics = NULL;
 }

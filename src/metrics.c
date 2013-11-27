@@ -62,8 +62,10 @@ char *odm_metrics_json(odm_t *odm)
     char          *dumped;
 
     for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
+    {
         json_object_set_new(j_metrics, metric->key,
                             json_integer(*metric->value));
+    }
 
     dumped = json_dumps(j_metrics, JSON_INDENT(4));
 
