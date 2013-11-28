@@ -63,8 +63,7 @@ char *odm_metrics_serialize(odm_t *odm)
     for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
         len += snprintf(NULL, 0, "%s\t%d\n", metric->key, *metric->value);
 
-    output = malloc(sizeof len);
-    len    = 0;
+    output = malloc(len + 1);
 
     if (!output)
         return NULL;
@@ -72,10 +71,7 @@ char *odm_metrics_serialize(odm_t *odm)
     p = output;
 
     for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
-    {
-        len += sprintf(p, "%s\t%d\n", metric->key, *metric->value);
-        p   += len;
-    }
+        p += sprintf(p, "%s\t%d\n", metric->key, *metric->value);
 
     return output;
 }
