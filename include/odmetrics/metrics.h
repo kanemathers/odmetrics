@@ -42,11 +42,11 @@ void odm_metrics_free(odm_t *odm);
 void odm_metrics_print(odm_t *odm);
 
 /**
- * Encode the metrics as a JSON object.
+ * Serialize the metrics to a string.
  *
- * @return Returns the JSON string. You must free the pointer when you've
+ * @return Returns the string. You must free the pointer when you've
  * finished with it.
  */
-char *odm_metrics_json(odm_t *odm);
+char *odm_metrics_serialize(odm_t *odm);
 
 #endif

@@ -4,7 +4,7 @@ CFILES := $(wildcard src/*.c)
 OFILES := $(CFILES:.c=.o)
 
 INCFLAGS += -I$(shell pwd)/include
-LDFLAGS  += -lpthread -ljansson
+LDFLAGS  += -lpthread
 CFLAGS   += -fPIC -Wall -pedantic
 
 # extra debug output for development purposes

@@ -137,7 +137,7 @@ static void *start_server(void *args)
         {
             close(sockfd);
 
-            metrics     = odm_metrics_json(odm);
+            metrics     = odm_metrics_serialize(odm);
             metrics_len = strlen(metrics);
 
             net_sendall(new_fd, metrics, &metrics_len);

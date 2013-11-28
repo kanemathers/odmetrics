@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <jansson.h>
-
 #include "odmetrics/odm.h"
 #include "odmetrics/metrics.h"
 #include "odmetrics/uthash.h"
@@ -55,21 +53,29 @@ void odm_metrics_print(odm_t *odm)
     printf("\n");
 }
 
-char *odm_metrics_json(odm_t *odm)
+char *odm_metrics_serialize(odm_t *odm)
 {
-    json_t        *j_metrics = json_object();
+    int            len = 0;
+    char          *p;
     struct metric *metric;
-    char          *dumped;
+    char          *output;
+
+    for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
+        len += snprintf(NULL, 0, "%s\t%d\n", metric->key, *metric->value);
+
+    output = malloc(sizeof len);
+    len    = 0;
+
+    if (!output)
+        return NULL;
+
+    p = output;
 
     for (metric = odm->metrics; metric != NULL; metric = metric->hh.next)
     {
-        json_object_set_new(j_metrics, metric->key,
-                            json_integer(*metric->value));
+        len += sprintf(p, "%s\t%d\n", metric->key, *metric->value);
+        p   += len;
     }
 
-    dumped = json_dumps(j_metrics, JSON_INDENT(4));
-
-    json_decref(j_metrics);
-
-    return dumped;
+    return output;
 }

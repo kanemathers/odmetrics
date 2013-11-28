@@ -11,8 +11,8 @@ Usage
 -----
 
 Metrics are nothing more than pointers to integers within your program. When
-clients connect to the odmetrics server, your metrics are JSON encoded and
-returned to the client.
+clients connect to the odmetrics server, your metrics are written out over
+the socket.
 
 This example program will run for 10 seconds, printing out the seconds
 elapsed as it goes. While the program runs, those seconds will be provided
@@ -47,3 +47,9 @@ to clients at ``127.0.0.1:8090``:
 Fire up another terminal and grab the metrics:
 
     $ nc 127.0.0.1 8090
+    uptime  2
+    $ nc 127.0.0.1 8090
+    uptime  6
+
+Metrics are output in the form of ``key\tvalue\n``. This is to allow for
+easy parsing via bash.
